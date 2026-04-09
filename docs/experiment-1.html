@@ -165,7 +165,7 @@ footer { padding: 2rem clamp(1.5rem, 5vw, 4rem); display: flex; justify-content:
       <h2>Background and hypothesis</h2>
     </div>
     <div class="prose reveal">
-      <p>During my PG Cert in Applied Data Science, I used LLM-processed ingredient data to clean and standardise raw ingredient text. Whilst those processed inputs were cleaner than the raw text, they still contained two notable issues that are thought to limit model performance.</p>
+      <p>During my PG Cert in Applied Data Science, I used an LLM to clean and standardise raw ingredient data. Whilst the processed outputs were cleaner than the raw text, they still contained two notable issues that are thought to have limited model performance.</p>
       <p>The first was <strong>lack of standardisation across products</strong>. The same ingredient would appear in different forms depending on the product: "skimmed milk", "skimmed milk powder", "semi-skimmed milk", and "milk solids" might all refer to broadly the same ingredient category but be treated as distinct terms by a model. Similarly, "palm oil", "sustainable palm oil", and "RSPO-certified palm oil" would not be recognised as equivalent.</p>
       <p>The second was <strong>inconsistent handling of nested ingredients</strong>. Many processed food products contain compound ingredients with their own sub-ingredient lists. For example, "chocolate chips (sugar, cocoa butter, cocoa mass, emulsifier: soya lecithin)" or "mayonnaise (rapeseed oil, egg yolk, vinegar, mustard)" each embed a second ingredient list within the first. LLM processing handled these inconsistently: sometimes flattening the sub-ingredients, sometimes preserving only the parent term, and sometimes duplicating information.</p>
       <p>This experiment replaces LLM-processed data with ingredient data drawn directly from the <a href="https://world.openfoodfacts.org" target="_blank">Open Food Facts</a> classification hierarchy, which provides a consistent, structured taxonomy for each ingredient. The hypothesis is that this more principled data source will reduce noise and improve classification accuracy.</p>
@@ -191,7 +191,7 @@ footer { padding: 2rem clamp(1.5rem, 5vw, 4rem); display: flex; justify-content:
           <span class="step-title">Dataset</span>
         </div>
         <div class="step-body">
-          <p>Approximately 32,000 rows were extracted from the <a href="https://world.openfoodfacts.org/data" target="_blank">Open Food Facts MongoDB data dump</a>, combining two ingredient representations: raw ingredient text (<code>ingredient_text</code>) and a structured classification hierarchy (<code>ingredient_hierarchy</code>). The combined field collapses nested ingredients into a flat, standardised list of terms, resolving the nesting and standardisation issues seen in my PG Cert research.</p>
+          <p>Approximately 32,000 rows were extracted from the <a href="https://world.openfoodfacts.org/data" target="_blank">Open Food Facts MongoDB data dump</a>, combining two ingredient representations: raw ingredient text (<code>ingredients_text</code>), structured classification hierarchy (<code>ingredients_hierarchy</code>) containing all available parent and child values, and the green-score (<code>ecoscore_grade</code>).</p>
           <div class="ingredient-example">
             <div class="ing-col">
               <span class="ing-label">Raw ingredient text</span>
