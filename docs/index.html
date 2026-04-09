@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Can ingredient lists predict environmental impact? — Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1a1a18;
+    --ink-mid: #4a4a44;
+    --ink-light: #8a8a80;
+    --paper: #f5f2eb;
+    --paper-warm: #ede9df;
+    --green: #2d5a3d;
+    --green-light: #4a8c5c;
+    --green-pale: #e8f0ea;
+    --accent: #c4622d;
+    --accent-pale: #f5e8e0;
+    --border: rgba(26,26,24,0.12);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 17px;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2.5rem;
+    height: 56px;
+    background: rgba(245,242,235,0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--ink-light);
+    text-transform: uppercase;
+  }
+  .nav-links { display: flex; gap: 2rem; }
+  .nav-links a {
+    font-size: 13px; color: var(--ink-mid); text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--green); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 7rem 2.5rem 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 80% 40%, rgba(45,90,61,0.07) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 10% 80%, rgba(196,98,45,0.05) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hero-inner {
+    max-width: 800px;
+    animation: fadeUp 0.9s ease both;
+  }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--green); margin-bottom: 2rem;
+  }
+  .hero-tag::before {
+    content: '';
+    display: block; width: 24px; height: 1px;
+    background: var(--green);
+  }
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin-bottom: 1.75rem;
+    color: var(--ink);
+  }
+  h1 em {
+    font-style: italic;
+    color: var(--green);
+  }
+  .hero-body {
+    font-size: 1.1rem;
+    color: var(--ink-mid);
+    max-width: 560px;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+  }
+  .hero-meta {
+    display: flex; gap: 2rem; flex-wrap: wrap;
+  }
+  .meta-item {
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .meta-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--ink-light);
+  }
+  .meta-value { font-size: 14px; color: var(--ink-mid); font-weight: 400; }
+
+  /* SCROLL INDICATOR */
+  .scroll-hint {
+    position: absolute; bottom: 2.5rem; left: 2.5rem;
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-light);
+    animation: fadeUp 1.2s 0.4s ease both;
+  }
+  .scroll-line {
+    width: 40px; height: 1px; background: var(--ink-light);
+    animation: expandLine 1.4s 0.6s ease both;
+  }
+
+  /* SECTIONS */
+  section {
+    padding: 5rem 2.5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  section + section {
+    border-top: 1px solid var(--border);
+  }
+
+  .section-header {
+    display: flex; align-items: baseline; gap: 1rem;
+    margin-bottom: 3rem;
+  }
+  .section-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; color: var(--ink-light);
+    letter-spacing: 0.08em;
+    flex-shrink: 0;
+  }
+  h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+
+  /* STAT GRID */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 3rem;
+  }
+  .stat-card {
+    background: var(--paper);
+    padding: 1.75rem;
+    transition: background 0.2s;
+  }
+  .stat-card:hover { background: var(--green-pale); }
+  .stat-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.4rem;
+    color: var(--green);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+  .stat-desc {
+    font-size: 13px;
+    color: var(--ink-mid);
+    line-height: 1.5;
+  }
+  .stat-source {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-light);
+    margin-top: 0.5rem;
+    letter-spacing: 0.05em;
+  }
+
+  /* PROSE */
+  .prose { max-width: 680px; }
+  .prose p { margin-bottom: 1.25rem; color: var(--ink-mid); }
+  .prose p:last-child { margin-bottom: 0; }
+
+  /* TWO COL */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+  }
+  @media (max-width: 680px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* CHALLENGE LIST */
+  .challenge-list { list-style: none; display: flex; flex-direction: column; gap: 1rem; }
+  .challenge-item {
+    display: flex; gap: 1rem; align-items: flex-start;
+    padding: 1.25rem;
+    background: var(--paper-warm);
+    border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+  .challenge-icon {
+    width: 28px; height: 28px; flex-shrink: 0;
+    background: var(--accent-pale);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; color: var(--accent); font-weight: 500;
+  }
+  .challenge-text { font-size: 14px; color: var(--ink-mid); line-height: 1.6; }
+
+  /* HIGHLIGHT BOX */
+  .highlight-box {
+    background: var(--green);
+    color: #fff;
+    border-radius: 8px;
+    padding: 2.5rem;
+    margin: 3rem 0;
+  }
+  .highlight-box p {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    opacity: 0.9;
+    font-weight: 300;
+  }
+  .highlight-box strong { font-weight: 500; opacity: 1; }
+
+  /* ECO GRADE */
+  .grade-row {
+    display: flex; gap: 6px; align-items: center;
+    margin-bottom: 1.5rem; flex-wrap: wrap;
+  }
+  .grade {
+    width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem; border-radius: 4px;
+    font-weight: 700;
+    transition: transform 0.15s;
+    cursor: default;
+  }
+  .grade:hover { transform: scale(1.1); }
+  .g-ap { background: #1a6e3c; color: #fff; }
+  .g-a  { background: #2e9e55; color: #fff; }
+  .g-b  { background: #7cc576; color: #fff; }
+  .g-c  { background: #f5c842; color: var(--ink); }
+  .g-d  { background: #f0922b; color: #fff; }
+  .g-e  { background: #e05c2a; color: #fff; }
+  .g-f  { background: #c0392b; color: #fff; }
+
+  /* RESEARCH Q */
+  .research-q {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+    line-height: 1.3;
+    color: var(--green);
+    font-style: italic;
+    border-left: 3px solid var(--green);
+    padding-left: 1.5rem;
+    margin: 2rem 0;
+  }
+
+  /* CONTACT */
+  .contact-section {
+    background: var(--paper-warm);
+    border-top: 1px solid var(--border);
+  }
+  .contact-inner {
+    max-width: 600px;
+  }
+  .contact-link {
+    display: inline-flex; align-items: center; gap: 8px;
+    color: var(--green); text-decoration: none;
+    font-size: 14px; font-weight: 400;
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 1px;
+    transition: opacity 0.2s;
+  }
+  .contact-link:hover { opacity: 0.7; }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-light);
+    letter-spacing: 0.06em;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes expandLine {
+    from { width: 0; }
+    to   { width: 40px; }
+  }
+
+  .fade-in {
+    opacity: 0; transform: translateY(16px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-label">Research</span>
+  <div class="nav-links">
+    <a href="#context">Context</a>
+    <a href="#approach">Approach</a>
+    <a href="#question">Research</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">Independent Research · Ongoing</div>
+    <h1>Can ingredient lists predict a food product's <em>environmental impact?</em></h1>
+    <p class="hero-body">
+      Life cycle assessment is the gold standard for measuring food's environmental footprint — but it's expensive, data-intensive, and slow. This research explores whether something far more accessible — the ingredient list — can do a similar job.
+    </p>
+    <div class="hero-meta">
+      <div class="meta-item">
+        <span class="meta-label">Status</span>
+        <span class="meta-value">PG Cert Applied Data Science · Continuing</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Presented at</span>
+        <span class="meta-value">IRICT Conference</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Dataset</span>
+        <span class="meta-value">Open Food Facts</span>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span class="scroll-line"></span>
+    Scroll to read
+  </div>
+</div>
+
+<!-- CONTEXT -->
+<section id="context">
+  <div class="section-header fade-in">
+    <span class="section-num">01</span>
+    <h2>Why food's environmental impact matters</h2>
+  </div>
+
+  <div class="stat-grid fade-in">
+    <div class="stat-card">
+      <div class="stat-num">&gt;¼</div>
+      <div class="stat-desc">of global greenhouse gas emissions come from food production</div>
+      <div class="stat-source">Poore &amp; Nemecek, 2018 · Science</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">94%</div>
+      <div class="stat-desc">of non-human mammal biomass on Earth is livestock</div>
+      <div class="stat-source">Bar-On et al., 2018 · PNAS</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">70%</div>
+      <div class="stat-desc">of global freshwater withdrawals are used for agriculture</div>
+      <div class="stat-source">FAO, 2011 · SOLAW Report</div>
+    </div>
+  </div>
+
+  <div class="prose fade-in">
+    <p>
+      Agriculture and food production don't just emit greenhouse gases — they reshape the planet's land, water, and biodiversity at scale. And the impacts don't stop at the farm gate: packaging, transportation, storage, and waste all compound the footprint of every product on a supermarket shelf.
+    </p>
+    <p>
+      Ensuring everyone has access to a nutritious diet in a way that is environmentally sustainable is one of the largest challenges of our time. Addressing it requires tools that help producers measure their impact — and communicate it to consumers in ways that are actionable.
+    </p>
+  </div>
+</section>
+
+<!-- ECO-LABELLING -->
+<section id="ecolabel">
+  <div class="section-header fade-in">
+    <span class="section-num">02</span>
+    <h2>Eco-labelling and the green score</h2>
+  </div>
+
+  <div class="two-col fade-in">
+    <div>
+      <p style="color: var(--ink-mid); margin-bottom: 1.5rem; font-size: 15px;">
+        Eco-labels have emerged as the primary tool for communicating the environmental impact of food products to consumers. The most comprehensive approach currently being explored is the <strong>Green Score</strong> — a grading system from A+ to F that accounts for the full life cycle of a product.
+      </p>
+      <div class="grade-row">
+        <div class="grade g-ap">A+</div>
+        <div class="grade g-a">A</div>
+        <div class="grade g-b">B</div>
+        <div class="grade g-c">C</div>
+        <div class="grade g-d">D</div>
+        <div class="grade g-e">E</div>
+        <div class="grade g-f">F</div>
+      </div>
+      <p style="color: var(--ink-light); font-size: 13px;">The Green Score grading system, based on life cycle assessment data from the French AGRIBALYSE programme.</p>
+    </div>
+
+    <div>
+      <p style="color: var(--ink-mid); margin-bottom: 1rem; font-size: 15px;">The challenge: gathering the data to calculate these scores is hard.</p>
+      <ul class="challenge-list">
+        <li class="challenge-item">
+          <span class="challenge-icon">01</span>
+          <span class="challenge-text">Food supply chains are complex — multiple stages, regions, and actors, from farms to distributors</span>
+        </li>
+        <li class="challenge-item">
+          <span class="challenge-icon">02</span>
+          <span class="challenge-text">Many supply chain actors don't collect detailed environmental data, limiting transparency</span>
+        </li>
+        <li class="challenge-item">
+          <span class="challenge-icon">03</span>
+          <span class="challenge-text">LCA requires numerous assumptions that vary by region, crop, and production method — introducing uncertainty</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- RESEARCH QUESTION -->
+<section id="question">
+  <div class="section-header fade-in">
+    <span class="section-num">03</span>
+    <h2>The research question</h2>
+  </div>
+
+  <div class="research-q fade-in">
+    "Can food product ingredient list data be used to predict environmental performance — and if so, could it serve as a practical alternative to full life cycle assessment?"
+  </div>
+
+  <div class="highlight-box fade-in">
+    <p>
+      Ingredient lists are <strong>already publicly available</strong> on almost every food product. If there is a meaningful statistical relationship between what a product contains and its environmental footprint, this could unlock a faster, cheaper, and more scalable route to eco-labelling — without waiting for complex LCA data to be gathered for every product.
+    </p>
+  </div>
+
+  <div class="prose fade-in">
+    <p>
+      This research uses <strong>Open Food Facts</strong> — an open-access, crowd-sourced database covering food products globally, including both ingredient lists and Green Score eco-grades — as a pre-labelled dataset to explore this relationship.
+    </p>
+    <p>
+      The approach treats ingredient data as a natural language / structured input and applies machine learning classification methods to predict eco-grade outcomes, examining how much predictive signal the ingredient list alone carries.
+    </p>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="contact-section">
+  <div class="contact-inner fade-in">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2>Get in touch</h2>
+    </div>
+    <p style="color: var(--ink-mid); margin-bottom: 2rem; font-size: 15px; max-width: 480px;">
+      This research is ongoing. If you work in food sustainability, environmental data, or eco-labelling policy and would like to discuss the work, I'd be glad to hear from you.
+    </p>
+    <a class="contact-link" href="https://linkedin.com/in/yourprofile" target="_blank">
+      Connect on LinkedIn →
+    </a>
+  </div>
+</section>
+
+<footer>
+  Independent research · PG Cert Applied Data Science · Ongoing
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
