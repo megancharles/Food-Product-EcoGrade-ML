@@ -119,6 +119,13 @@ footer { padding: 2rem clamp(1.5rem, 5vw, 4rem); display: flex; justify-content:
 .team-title { font-size: 13px; color: var(--ink-mid); line-height: 1.5; }
 .team-role { font-family: "IBM Plex Mono", monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--green); margin-top: 2px; }
 .contact-block { padding-top: 2.5rem; border-top: 1px solid var(--rule); }
+
+.results-table { margin: 2.5rem 0; overflow-x: auto; }
+.results-table table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.results-table th { font-family: "IBM Plex Mono", monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); padding: 0.75rem 1rem; border-bottom: 1px solid var(--rule); text-align: left; font-weight: 400; }
+.results-table td { padding: 0.85rem 1rem; border-bottom: 1px solid var(--rule); color: var(--ink-mid); }
+.results-table tr:last-child td { border-bottom: none; }
+.results-table tr:hover td { background: var(--paper-2); }
 </style>
 </head>
 <body>
@@ -245,8 +252,55 @@ footer { padding: 2rem clamp(1.5rem, 5vw, 4rem); display: flex; justify-content:
       <span class="s-num">03</span>
       <h2>Results and findings</h2>
     </div>
-    <div class="placeholder reveal">
-      <p>Results coming soon.</p>
+    <div class="prose reveal">
+      <p>Three model configurations were evaluated, progressing from an initial regression approach to a classifier with improved class balancing. The final XGBoost Classifier achieved <strong>74% overall accuracy</strong> and a weighted F1 score of 0.73 across 6,348 test samples, with a mean absolute error of 0.41. An MAE below 0.5 means that on average, when the model is wrong it is wrong by less than one grade.</p>
+    </div>
+
+    <div class="method-steps reveal">
+      <div class="method-step">
+        <div class="step-head">
+          <span class="step-n">Model A</span>
+          <span class="step-title">XGBoost Regressor</span>
+        </div>
+        <div class="step-body">
+          <p>The regression approach treated eco-grades as a continuous ordinal scale, predicting a score that was then rounded to the nearest grade. Overall accuracy was <strong>57%</strong> with a macro F1 of 0.48 and MAE of 0.545. Critically, the model never predicted the A+ class at all. Because A+ sits at the bottom of the numeric scale (class 0), the regression pulled predictions toward the middle of the distribution and never got close enough to round down to it.</p>
+        </div>
+      </div>
+      <div class="method-step">
+        <div class="step-head">
+          <span class="step-n">Model B</span>
+          <span class="step-title">XGBoost Classifier, no minimum class size</span>
+        </div>
+        <div class="step-body">
+          <p>Switching to a multiclass classifier produced a significant improvement. Accuracy rose to <strong>74%</strong>, macro F1 to 0.65, and MAE fell to 0.409. The classifier successfully predicted A+ for the first time (F1 of 0.08), confirming that the regressor's failure on that class was a structural limitation rather than a data problem. Grades D, E, and F all performed strongly, with F1 scores of 0.81, 0.71, and 0.81 respectively.</p>
+        </div>
+      </div>
+      <div class="method-step">
+        <div class="step-head">
+          <span class="step-n">Model C</span>
+          <span class="step-title">XGBoost Classifier, minimum 762 samples per class</span>
+        </div>
+        <div class="step-body">
+          <p>Upsampling the smallest class (A+) to a minimum of 762 training samples produced a marginal improvement in A+ recall (F1 rising from 0.08 to 0.11) but did not meaningfully change overall accuracy (73%) or MAE (0.411). The A+ class remains the hardest to predict, likely due to its scarcity and the possibility that very low-impact products do not have sufficiently distinctive ingredient profiles.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="results-table reveal">
+      <table>
+        <thead>
+          <tr><th>Model</th><th>Accuracy</th><th>Macro F1</th><th>Weighted F1</th><th>MAE</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>XGBoost Regressor</td><td>0.57</td><td>0.48</td><td>0.57</td><td>0.545</td></tr>
+          <tr><td>XGBoost Classifier (no min)</td><td><strong>0.74</strong></td><td><strong>0.65</strong></td><td><strong>0.73</strong></td><td><strong>0.409</strong></td></tr>
+          <tr><td>XGBoost Classifier (min 762)</td><td>0.73</td><td>0.66</td><td>0.73</td><td>0.411</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="prose reveal" style="margin-top: 2.5rem;">
+      <p><strong>Most predictive ingredients</strong> (by TF-IDF feature importance) included long grain rice, olive oil, mustard, honey, milk, pulses, tree nuts, and palm oil. These ingredients carry the most weight in the model's predictions, suggesting they are strongly associated with particular eco-grade outcomes — though further analysis is needed to determine the direction of those associations.</p>
     </div>
   </div>
 </section>
@@ -257,8 +311,11 @@ footer { padding: 2rem clamp(1.5rem, 5vw, 4rem); display: flex; justify-content:
       <span class="s-num">04</span>
       <h2>Conclusions</h2>
     </div>
-    <div class="placeholder reveal">
-      <p>Conclusions coming soon.</p>
+    <div class="prose reveal">
+      <p>This experiment provides meaningful evidence that food product ingredient lists carry predictive signal for environmental performance. An overall accuracy of 74% and a mean absolute error of 0.41 on a seven-class grading scale suggests that the ingredient list alone is a useful feature for eco-grade prediction, and that data quality matters significantly to that outcome.</p>
+      <p>The step from the XGBoost Regressor (57% accuracy) to the XGBoost Classifier (74%) was the most consequential improvement, driven by a structural change in modelling approach rather than the data itself. The classifier's ability to give every class an independent probability resolved the specific failure mode of the regressor, which was structurally unable to predict the least common grade.</p>
+      <p>The A+ class remains a persistent challenge. Even with upsampled training data, the model achieves only an F1 of 0.11 for this grade. This likely reflects genuine scarcity of A+ products in the dataset and the possibility that very low-impact products do not have sufficiently distinctive ingredient profiles to be reliably separated from A-grade products.</p>
+      <p>Overall, these results support the central hypothesis that cleaner, more consistently structured ingredient data improves model performance. The next steps will explore whether further data improvements, alternative feature representations, or additional input signals can improve prediction of the harder-to-classify grades, particularly A+.</p>
     </div>
   </div>
 </section>
