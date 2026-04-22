@@ -3,11 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ingredient Lists as Environmental Predictors — Research</title>
+<title>Experiment 0 — EcoGradeML: Predicting Food Eco-Grades from Ingredient Lists</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;1,300&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
   --ink:        #1c1c1a;
@@ -22,12 +23,7 @@
   --rule:       rgba(28,28,26,0.1);
 }
 html { scroll-behavior: smooth; font-size: 16px; }
-body {
-  background: var(--paper); color: var(--ink);
-  font-family: 'IBM Plex Sans', sans-serif;
-  font-weight: 300; line-height: 1.75;
-  -webkit-font-smoothing: antialiased;
-}
+body { background: var(--paper); color: var(--ink); font-family: 'IBM Plex Sans', sans-serif; font-weight: 300; line-height: 1.75; -webkit-font-smoothing: antialiased; }
 h1, h2, h3 { font-family: 'Libre Baskerville', serif; font-weight: 400; line-height: 1.15; color: var(--ink); }
 p { color: var(--ink-mid); }
 strong { font-weight: 500; color: var(--ink); }
@@ -39,23 +35,19 @@ nav {
   background: rgba(250,248,243,0.95); backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--rule);
 }
+.nav-back { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink-muted); font-size: 13px; transition: color 0.15s; }
+.nav-back:hover { color: var(--green); }
 .nav-id { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-muted); }
-.nav-links { display: flex; gap: 2.5rem; }
-.nav-links a { font-size: 13px; font-weight: 400; color: var(--ink-mid); text-decoration: none; transition: color 0.15s; }
-.nav-links a:hover { color: var(--green); }
-@media (max-width: 560px) { .nav-links { display: none; } }
 
 .hero {
-  min-height: 100vh; padding: 7rem clamp(1.5rem, 5vw, 4rem) 4rem;
+  min-height: 60vh; padding: 7rem clamp(1.5rem, 5vw, 4rem) 4rem;
   border-bottom: 1px solid var(--rule);
   display: flex; flex-direction: column; justify-content: center;
 }
-.hero-content { width: 100%; }
-.eyebrow { display: flex; align-items: center; gap: 12px; margin-bottom: 2.25rem; }
+.eyebrow { display: flex; align-items: center; gap: 12px; margin-bottom: 2rem; }
 .eyebrow-line { width: 32px; height: 1px; background: var(--green); flex-shrink: 0; }
 .eyebrow-text { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--green); }
-h1 { font-size: clamp(2rem, 5vw, 3.6rem); letter-spacing: -0.02em; margin-bottom: 2rem; }
-h1 em { font-style: italic; color: var(--green); }
+h1 { font-size: clamp(1.8rem, 4vw, 3rem); letter-spacing: -0.02em; margin-bottom: 1.75rem; width: 100%; }
 .hero-lead { font-size: clamp(1rem, 1.5vw, 1.1rem); color: var(--ink-mid); margin-bottom: 3rem; line-height: 1.85; }
 .hero-meta { display: flex; flex-wrap: wrap; gap: 2.5rem; padding-top: 2rem; border-top: 1px solid var(--rule); }
 .meta-pair { display: flex; flex-direction: column; gap: 3px; }
@@ -76,63 +68,36 @@ h2 { font-size: clamp(1.5rem, 2.5vw, 2rem); }
 .prose a { color: var(--green); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.15s; }
 .prose a:hover { border-color: var(--green); }
 
-.stat-row {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 1px; background: var(--rule);
-  border: 1px solid var(--rule); border-radius: 6px; overflow: hidden;
-  margin-bottom: 3.5rem;
+.hypothesis { border-left: 2px solid var(--green); padding: 1rem 0 1rem 1.75rem; margin: 2rem 0 1.5rem; width: 100%; }
+.hypothesis .h-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green); margin-bottom: 6px; }
+.hypothesis p { font-size: 1rem; font-style: italic; color: var(--ink-mid); }
+
+.method-steps { display: flex; flex-direction: column; margin-top: 3rem; border-top: 1px solid var(--rule); }
+.method-step { display: grid; grid-template-columns: 120px 1fr; gap: 0 1.5rem; padding: 2.5rem 0; border-bottom: 1px solid var(--rule); }
+.step-head { display: flex; flex-direction: column; gap: 6px; padding-top: 3px; }
+.step-n { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink-muted); letter-spacing: 0.08em; }
+.step-title { font-family: 'Libre Baskerville', serif; font-size: 13px; color: var(--green-dark); font-style: italic; line-height: 1.3; }
+.step-body p { font-size: 15px; color: var(--ink-mid); line-height: 1.85; margin-bottom: 1.25rem; }
+.step-body p:last-child { margin-bottom: 0; }
+.step-body a { color: var(--green); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.15s; }
+.step-body a:hover { border-color: var(--green); }
+
+code { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--green-dark); background: var(--green-pale); padding: 1px 5px; border-radius: 3px; }
+
+.ingredient-example {
+  display: grid; grid-template-columns: 1fr auto 1fr;
+  gap: 1rem; align-items: start;
+  margin-top: 1.5rem; padding: 1.5rem;
+  background: var(--paper-2); border-radius: 6px; border: 1px solid var(--rule);
 }
-@media (max-width: 600px) { .stat-row { grid-template-columns: 1fr; } }
-.stat-cell { background: var(--paper); padding: 2rem 1.75rem; }
-.stat-fig { font-family: 'Libre Baskerville', serif; font-size: 2.6rem; color: var(--green-dark); line-height: 1; margin-bottom: 0.6rem; }
-.stat-desc { font-size: 14px; color: var(--ink-mid); line-height: 1.55; }
-.stat-cite { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--ink-muted); margin-top: 0.6rem; letter-spacing: 0.04em; }
-.stat-cite a { color: var(--ink-muted); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.15s; }
-.stat-cite a:hover { color: var(--green); border-color: var(--green); }
+@media (max-width: 680px) { .ingredient-example { grid-template-columns: 1fr; } .ing-arrow { display: none; } }
+.ing-col { display: flex; flex-direction: column; gap: 6px; }
+.ing-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-muted); }
+.ing-val { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--ink-mid); line-height: 1.65; }
+.ing-arrow { font-size: 18px; color: var(--green); padding-top: 1.4rem; }
 
-.content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
-@media (max-width: 760px) { .content-grid { grid-template-columns: 1fr; gap: 2.5rem; } }
-
-.challenges { display: flex; flex-direction: column; }
-.challenge { display: grid; grid-template-columns: 36px 1fr; gap: 1rem; align-items: start; padding: 1.25rem 0; border-bottom: 1px solid var(--rule); }
-.challenge:first-child { border-top: 1px solid var(--rule); }
-.ch-n { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink-muted); padding-top: 3px; }
-.ch-text { font-size: 14px; color: var(--ink-mid); line-height: 1.65; }
-
-.grade-strip { display: flex; gap: 5px; flex-wrap: wrap; margin: 1.5rem 0 0.75rem; }
-.grade { width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; font-family: 'IBM Plex Sans', sans-serif; font-weight: 500; font-size: 14px; border-radius: 4px; }
-.gAp { background: #17543a; color: #fff; }
-.gA  { background: #2b8a52; color: #fff; }
-.gB  { background: #72c072; color: #1a1a18; }
-.gC  { background: #f5c430; color: #2a1f00; }
-.gD  { background: #f0882b; color: #fff; }
-.gE  { background: #de4d2a; color: #fff; }
-.gF  { background: #b52b2b; color: #fff; }
-.grade-caption { font-size: 12px; color: var(--ink-muted); }
-
-.callout { background: var(--green-dark); border-radius: 6px; padding: 2.5rem 3rem; margin: 3.5rem 0; width: 100%; }
-.callout p { font-size: 1.05rem; line-height: 1.85; color: rgba(255,255,255,0.88); }
-.callout strong { color: #fff; font-weight: 500; }
-
-.rq { font-family: 'Libre Baskerville', serif; font-style: italic; font-size: clamp(1.1rem, 2vw, 1.45rem); line-height: 1.55; color: var(--green-dark); border-left: 2px solid var(--green); padding: 0.5rem 0 0.5rem 1.75rem; margin: 2.5rem 0 3rem; width: 100%; }
-
-.experiments { display: flex; flex-direction: column; gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; }
-.experiment-card {
-  background: var(--paper); padding: 2rem 2.25rem;
-  display: grid; grid-template-columns: 1fr auto;
-  gap: 1rem; align-items: center;
-  text-decoration: none; color: inherit;
-  transition: background 0.15s;
-}
-.experiment-card:hover { background: var(--green-pale); }
-.exp-meta { display: flex; flex-direction: column; gap: 6px; }
-.exp-tag { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green); }
-.exp-title { font-family: 'Libre Baskerville', serif; font-size: 1.1rem; color: var(--ink); }
-.exp-desc { font-size: 13px; color: var(--ink-muted); line-height: 1.6; max-width: 560px; }
-.exp-arrow { font-size: 20px; color: var(--ink-muted); flex-shrink: 0; }
-.exp-status { display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 3px; margin-top: 4px; }
-.status-complete { background: var(--green-pale); color: var(--green-dark); }
-.status-ongoing  { background: var(--paper-2); color: var(--ink-muted); }
+.placeholder { border: 1px dashed var(--paper-3); border-radius: 6px; padding: 3rem 2rem; text-align: center; background: var(--paper-2); width: 100%; }
+.placeholder p { font-size: 14px; color: var(--ink-muted); margin: 0; }
 
 .contact-section { background: var(--paper-2); }
 .contact-link { display: inline-flex; align-items: center; gap: 6px; color: var(--green); font-size: 14px; font-weight: 400; text-decoration: none; border-bottom: 1px solid currentColor; padding-bottom: 1px; margin-top: 1.5rem; transition: opacity 0.15s; }
@@ -140,6 +105,8 @@ h2 { font-size: clamp(1.5rem, 2.5vw, 2rem); }
 
 footer { padding: 2rem clamp(1.5rem, 5vw, 4rem); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
 .footer-text { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink-muted); letter-spacing: 0.06em; }
+.footer-link { color: var(--green); text-decoration: none; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.06em; }
+.footer-link:hover { text-decoration: underline; }
 
 .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.65s ease, transform 0.65s ease; }
 .reveal.in { opacity: 1; transform: none; }
@@ -153,155 +120,201 @@ footer { padding: 2rem clamp(1.5rem, 5vw, 4rem); display: flex; justify-content:
 .team-title { font-size: 13px; color: var(--ink-mid); line-height: 1.5; }
 .team-role { font-family: "IBM Plex Mono", monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--green); margin-top: 2px; }
 .contact-block { padding-top: 2.5rem; border-top: 1px solid var(--rule); }
+
+
+.results-table { margin: 2.5rem 0; overflow-x: auto; }
+.results-table table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.results-table th { font-family: "IBM Plex Mono", monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); padding: 0.75rem 1rem; border-bottom: 1px solid var(--rule); text-align: left; font-weight: 400; }
+.results-table td { padding: 0.85rem 1rem; border-bottom: 1px solid var(--rule); color: var(--ink-mid); }
+.results-table tr:last-child td { border-bottom: none; }
+.results-table tr:hover td { background: var(--paper-2); }
+.team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 3.5rem; }
+@media (max-width: 760px) { .team-grid { grid-template-columns: 1fr; } }
+.team-card { display: flex; flex-direction: column; gap: 1rem; }
+.team-photo { width: 50%; aspect-ratio: 1; object-fit: cover; object-position: center top; border-radius: 6px; filter: grayscale(15%); }
+.team-info { display: flex; flex-direction: column; gap: 4px; }
+.team-name { font-family: "Libre Baskerville", serif; font-size: 1rem; color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--rule); transition: color 0.15s, border-color 0.15s; }
+.team-name:hover { color: var(--green); border-color: var(--green); }
+.team-title { font-size: 13px; color: var(--ink-mid); line-height: 1.5; }
+.team-role { font-family: "IBM Plex Mono", monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--green); margin-top: 2px; }
+.contact-block { padding-top: 2.5rem; border-top: 1px solid var(--rule); }
+
 </style>
 </head>
 <body>
 
 <nav>
-  <span class="nav-id">Research · Food &amp; Environment · Machine Learning</span>
-  <div class="nav-links">
-    <a href="#context">Context</a>
-    <a href="#ecolabel">Eco-labelling</a>
-    <a href="#question">Our Research Question</a>
-    <a href="#experiments">Our Experiments</a>
-    <a href="#contact">Contact Us</a>
-  </div>
+  <a class="nav-back" href="index.html">
+    <span>&#8592;</span>
+    All research
+  </a>
+  <span class="nav-id">Experiment 0 · September 2025 </span>
 </nav>
 
 <section class="hero">
-  <div class="hero-content">
-    <div class="eyebrow">
-      <span class="eyebrow-line"></span>
-      <span class="eyebrow-text">Independent Research</span>
+  <div class="eyebrow">
+    <span class="eyebrow-line"></span>
+    <span class="eyebrow-text">Experiment 0 · IRICT Conference 2025</span>
+  </div>
+  <h1>EcoGradeML: predicting food eco-grades from <em>ingredient lists</em></h1>
+  <p class="hero-lead">This experiment investigates whether machine learning models can predict the environmental eco-grade of a food product from its ingredient list alone, using multilingual data from Open Food Facts and a range of models including KNN, Random Forest, and XGBoost variants. It was presented at the IRICT Conference 2025.</p>
+  <div class="hero-meta">
+    <div class="meta-pair">
+      <span class="meta-label">Dataset</span>
+      <span class="meta-val"><a href="https://world.openfoodfacts.org" target="_blank">Open Food Facts</a> · 2,485 rows</span>
     </div>
-    <h1>Predicting the <em>environmental impact</em> of food products.</h1>
-    <p class="hero-lead">Life cycle assessment is the gold standard for measuring food's environmental footprint, but it is expensive, data-intensive, and slow to scale. This research investigates whether more readily available data, such as the ingredient list, can carry the same predictive signal.</p>
-    <p class="hero-lead" style="margin-top: -1.5rem;">What began as a research project for a PG Cert in Applied Data Science has grown into an ongoing independent research programme. The questions it raised were too interesting to leave at the point of submission, so the work continues.</p>
-    <div class="hero-meta">
-      <div class="meta-pair">
-        <span class="meta-label">Status</span>
-        <span class="meta-val">Ongoing as of April 2026</span>
-      </div>
-      <div class="meta-pair">
-        <span class="meta-label">Presented at</span>
-        <span class="meta-val">IRICT Conference 2025 (Experiment 0)</span>
-      </div>
-      <div class="meta-pair">
-        <span class="meta-label">Dataset</span>
-        <span class="meta-val"><a href="https://world.openfoodfacts.org" target="_blank">Open Food Facts</a></span>
-      </div>
+    <div class="meta-pair">
+      <span class="meta-label">Models</span>
+      <span class="meta-val">KNN, Random Forest, XGBoost, Ordinal variants</span>
+    </div>
+    <div class="meta-pair">
+      <span class="meta-label">Embeddings</span>
+      <span class="meta-val"><a href="https://huggingface.co/alexdseo/RecipeBERT" target="_blank">RecipeBERT</a> + PCA</span>
+    </div>
+    <div class="meta-pair">
+      <span class="meta-label">Published</span>
+      <span class="meta-val">In progress</span>
     </div>
   </div>
 </section>
 
-<section class="page-section" id="context">
+<section class="page-section" id="background">
   <div class="section-inner">
     <div class="section-head reveal">
       <span class="s-num">01</span>
-      <h2>The environmental cost of food</h2>
-    </div>
-    <div class="stat-row reveal">
-      <div class="stat-cell">
-        <div class="stat-fig">&gt;¼</div>
-        <div class="stat-desc">of global greenhouse gas emissions come from food production</div>
-        <div class="stat-cite"><a href="https://doi.org/10.1126/science.aaq0216" target="_blank">Poore &amp; Nemecek, 2018 · Science</a></div>
-      </div>
-      <div class="stat-cell">
-        <div class="stat-fig">94%</div>
-        <div class="stat-desc">of non-human mammal biomass on Earth is livestock</div>
-        <div class="stat-cite"><a href="https://doi.org/10.1073/pnas.1711842115" target="_blank">Bar-On et al., 2018 · PNAS</a></div>
-      </div>
-      <div class="stat-cell">
-        <div class="stat-fig">70%</div>
-        <div class="stat-desc">of global freshwater withdrawals are used for agriculture</div>
-        <div class="stat-cite"><a href="https://www.fao.org/3/i1688e/i1688e.pdf" target="_blank">FAO, 2011 · SOLAW</a></div>
-      </div>
+      <h2>Background and motivation</h2>
     </div>
     <div class="prose reveal">
-      <p>Agriculture and food production do not just emit greenhouse gases; they reshape land, water, and biodiversity at a planetary scale. The impacts compound beyond the farm gate: packaging, transportation, storage, and waste all add to the footprint of every product on a supermarket shelf.</p>
-      <p>Ensuring access to a nutritious diet in an environmentally sustainable way is one of the defining challenges of our time. Meeting it requires tools that help producers measure their impact accurately and communicate it to consumers in ways that are simple and actionable. Eco-labels have emerged as the primary approach, but calculating them accurately requires full life cycle assessment data, which is difficult and expensive to gather at scale.</p>
+      <p>Traditional methods of assessing environmental impact for eco-labelling rely on Life Cycle Assessment (LCA) data, which is costly, resource-intensive, and difficult to gather at scale, particularly for food products with complex, multi-stage supply chains. This creates a significant barrier to widespread eco-labelling adoption.</p>
+      <p>Ingredient lists represent an underexplored but widely available alternative data source. Unlike LCA, they are freely available on almost every packaged food product, require no supply chain data collection, and can in principle be used to infer the compositional factors that drive environmental impact. While previous research has used product names to predict eco-grades (achieving 73% accuracy), product names are tied to known product classes and may not generalise well to unseen products. Ingredient data could provide a more composition-aware signal.</p>
+      <p>This study, conducted as part of Megan's PG Cert in Applied Data Science and presented at the IRICT Conference 2025, provides the first empirical assessment of using multilingual ingredient list data to predict food eco-grades using a range of machine learning approaches.</p>
+    </div>
+    <div class="hypothesis reveal">
+      <div class="h-label">Research question</div>
+      <p>Can machine learning models trained on ingredient list data reliably predict the eco-grade of a food product, and if so, which approaches perform best?</p>
     </div>
   </div>
 </section>
 
-<section class="page-section" id="ecolabel">
+<section class="page-section" id="methodology">
   <div class="section-inner">
     <div class="section-head reveal">
       <span class="s-num">02</span>
-      <h2>Eco-labelling and the green score</h2>
+      <h2>Methodology</h2>
     </div>
-    <div class="content-grid reveal">
-      <div>
-        <p style="font-size:15px; color:var(--ink-mid); margin-bottom:1.25rem; line-height:1.85;">Eco-labels have emerged as the primary tool for communicating environmental impact to consumers. The most comprehensive approach currently under exploration is the <strong>Green Score</strong>, a grading system from A+ to F that reflects a product's full life cycle, calculated using data from the French AGRIBALYSE programme.</p>
-        <div class="grade-strip">
-          <span class="grade gAp">A+</span>
-          <span class="grade gA">A</span>
-          <span class="grade gB">B</span>
-          <span class="grade gC">C</span>
-          <span class="grade gD">D</span>
-          <span class="grade gE">E</span>
-          <span class="grade gF">F</span>
+    <div class="method-steps reveal">
+      <div class="method-step">
+        <div class="step-head">
+          <span class="step-n">01</span>
+          <span class="step-title">Dataset</span>
         </div>
-        <p class="grade-caption">Green Score eco-grades, based on life cycle assessment data.</p>
+        <div class="step-body">
+          <p>2,485 rows were exported from the <a href="https://world.openfoodfacts.org" target="_blank">Open Food Facts</a> database, selecting products with non-null values in both the ingredient list text field and the eco-grade field. The eco-grade is calculated by Open Food Facts using LCA data from the <a href="https://agribalyse.ademe.fr/" target="_blank">Agribalyse</a> database, adjusted for product-level attributes including certification labels, ingredient origin, and packaging. The target variable was defined on a 7-point ordinal scale from A+ to F.</p>
+        </div>
       </div>
-      <div>
-        <p style="font-size:15px; color:var(--ink-mid); margin-bottom:1.5rem; line-height:1.85;">The core challenge is that gathering the data to calculate these scores is difficult.</p>
-        <div class="challenges">
-          <div class="challenge">
-            <span class="ch-n">01</span>
-            <span class="ch-text">Food supply chains span multiple stages, regions, and actors, from farms to distributors, making data collection complex</span>
-          </div>
-          <div class="challenge">
-            <span class="ch-n">02</span>
-            <span class="ch-text">Many supply chain actors do not collect detailed environmental data, limiting transparency</span>
-          </div>
-          <div class="challenge">
-            <span class="ch-n">03</span>
-            <span class="ch-text">LCA requires numerous assumptions that vary by region, crop, and production method, introducing uncertainty into results</span>
-          </div>
+      <div class="method-step">
+        <div class="step-head">
+          <span class="step-n">02</span>
+          <span class="step-title">Preprocessing</span>
+        </div>
+        <div class="step-body">
+          <p>The ingredient text field contained multilingual, unstructured data. Translation and normalisation were performed using GPT-4 Turbo, which standardised ingredient names, removed extraneous metadata, and decomposed compound ingredients. A Python rule-driven pipeline was applied to flatten nested ingredient structures. Class imbalance was addressed using SMOTE oversampling and class weighting, and multilingual back-translation was used to synthetically increase diversity of ingredient expressions.</p>
+        </div>
+      </div>
+      <div class="method-step">
+        <div class="step-head">
+          <span class="step-n">03</span>
+          <span class="step-title">Feature representation</span>
+        </div>
+        <div class="step-body">
+          <p>Ingredients were vectorised using <a href="https://huggingface.co/alexdseo/RecipeBERT" target="_blank">RecipeBERT</a>, a transformer pretrained on over one million food-related recipes, providing contextual embeddings that capture semantic differences between ingredient variants. Two approaches were evaluated: enriched full embeddings augmented with binary domain-specific features (e.g. flags for beef, palm oil, and dairy), and PCA-reduced embeddings yielding 34 principal components explaining 95% of total variance.</p>
+        </div>
+      </div>
+      <div class="method-step">
+        <div class="step-head">
+          <span class="step-n">04</span>
+          <span class="step-title">Models evaluated</span>
+        </div>
+        <div class="step-body">
+          <p>Seven model families were evaluated: K-Nearest Neighbours (KNN) and Random Forest (RF) as baselines; Ridge Ordinal Regression and SVR Ordinal as regression-based ordinal approaches; CORAL and CORN as logistic ordinal regression frameworks; and XGBoost variants (tree, multiclass, and random forest configurations). Ensemble methods combining majority and soft voting were also tested. Models were trained with hyperparameter tuning, stratified cross-validation, and probability calibration via CalibratedClassifierCV. SHAP values were used to assess feature importance and interpretability.</p>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="page-section" id="question">
+<section class="page-section" id="results">
   <div class="section-inner">
     <div class="section-head reveal">
       <span class="s-num">03</span>
-      <h2>The research question</h2>
+      <h2>Results and findings</h2>
     </div>
-    <div class="rq reveal">"Can readily available data be used to reliably estimate the environmental impact of food products and, if so, could it serve as a practical alternative to full life cycle assessment?"</div>
     <div class="prose reveal">
-      <p>This research uses <a href="https://world.openfoodfacts.org" target="_blank">Open Food Facts</a>, an open-access, crowd-sourced database covering food products globally, including both ingredient lists and Green Score eco-grades, as a pre-labelled dataset to explore this relationship.</p>
+      <p>Across all models, the best test accuracy achieved was <strong>36.5%</strong> (KNN with full embeddings). Performance was modest overall, reflecting the inherent difficulty of separating seven compositionally similar eco-grade categories from ingredient data alone. However, a consistent and meaningful pattern emerged: extreme eco-grades (A+, A, and F) were predicted with substantially higher reliability than intermediate grades (B, C, D, E).</p>
+    </div>
+    <div class="method-steps reveal">
+      <div class="method-step">
+        <div class="step-head">
+          <span class="step-n">KNN / RF</span>
+          <span class="step-title">Baseline models</span>
+        </div>
+        <div class="step-body">
+          <p>KNN and RF using PCA-reduced embeddings served as baselines, achieving test accuracies of 0.32 and 0.35 respectively. Moving to full embeddings provided marginal improvements (KNN: 0.365, RF: 0.354), though RF showed clear overfitting with training accuracy of 1.00. These models showed stronger recall on extreme grades, particularly grade F (F1 of 0.55 to 0.58 across variants).</p>
+        </div>
+      </div>
+      <div class="method-step">
+        <div class="step-head">
+          <span class="step-n">Ordinal</span>
+          <span class="step-title">Ridge, SVR, CORAL, CORN</span>
+        </div>
+        <div class="step-body">
+          <p>Ordinal regression models achieved lower test accuracies (0.22 to 0.30), but contributed interpretability by modelling the inherent ordering of eco-grades. Ridge Ordinal reached 0.299, while SVR-based approaches struggled with non-linear separability (0.22 to 0.23). These models highlight grade transitions rather than maximising accuracy.</p>
+        </div>
+      </div>
+      <div class="method-step">
+        <div class="step-head">
+          <span class="step-n">XGBoost</span>
+          <span class="step-title">Tree, multiclass, RF variants</span>
+        </div>
+        <div class="step-body">
+          <p>XGBoost variants achieved test accuracies of approximately 0.33 to 0.34, competitive with the best baselines but prone to overfitting (training accuracy 1.00). The ensemble of all models via majority voting reached 0.35, with limited gains due to model disagreement on middle grades.</p>
+        </div>
+      </div>
+    </div>
+    <div class="results-table reveal">
+      <table>
+        <thead>
+          <tr><th>Model</th><th>Feature representation</th><th>Test accuracy</th><th>F1 (weighted)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>KNN</td><td>PCA-reduced</td><td>0.32</td><td>0.31</td></tr>
+          <tr><td>Random Forest</td><td>PCA-reduced</td><td>0.35</td><td>0.35</td></tr>
+          <tr><td>KNN</td><td>Full embeddings</td><td><strong>0.365</strong></td><td>0.359</td></tr>
+          <tr><td>Random Forest</td><td>Full embeddings</td><td>0.354</td><td>0.340</td></tr>
+          <tr><td>Ridge Ordinal</td><td>Full embeddings</td><td>0.299</td><td>0.293</td></tr>
+          <tr><td>SVR Ordinal</td><td>Full embeddings</td><td>0.226</td><td>0.213</td></tr>
+          <tr><td>XGBoost (multiclass)</td><td>Full embeddings</td><td>0.339</td><td>0.337</td></tr>
+          <tr><td>Ensemble (majority voting)</td><td>Full embeddings</td><td>0.350</td><td>0.341</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="prose reveal" style="margin-top: 2.5rem;">
+      <p>Per-class analysis revealed that grade F consistently achieved the highest F1 scores (0.55 to 0.58), followed by A+ and A. Middle grades (B, C, D, E) were hardest to separate, with grade C often falling below an F1 of 0.25. This pattern held across all model families, suggesting it reflects the data rather than any single model limitation.</p>
     </div>
   </div>
 </section>
 
-<section class="page-section" id="experiments">
+<section class="page-section" id="conclusions">
   <div class="section-inner">
     <div class="section-head reveal">
       <span class="s-num">04</span>
-      <h2>Experiments</h2>
+      <h2>Conclusions</h2>
     </div>
-    <div class="experiments reveal">
-      <a class="experiment-card" href="experiment-0.html">
-        <div class="exp-meta">
-          <span class="exp-tag">Experiment 0</span>
-          <span class="exp-title">EcoGradeML: predicting food eco-grades from ingredient lists</span>
-          <span class="exp-desc">Evaluating baseline and ordinal models (KNN, RF, XGBoost, CORAL, CORN) on LLM-processed ingredient embeddings to establish a performance baseline for eco-grade classification.</span>
-          <span class="exp-status status-complete">Complete · IRICT 2025</span>
-        </div>
-        <span class="exp-arrow">→</span>
-      </a>
-      <a class="experiment-card" href="experiment-1.html">
-        <div class="exp-meta">
-          <span class="exp-tag">Experiment 1</span>
-          <span class="exp-title">Cleaner ingredient data as a predictor of environmental performance</span>
-          <span class="exp-desc">Using Open Food Facts ingredient hierarchy data combined with raw ingredient text to test whether higher data quality improves classification of eco-grades with XGBoost.</span>
-        </div>
-        <span class="exp-arrow">→</span>
-      </a>
+    <div class="prose reveal">
+      <p>This study demonstrates that ingredient lists carry meaningful predictive signal for food eco-grades. While overall accuracy was modest (up to 36.5%), the consistent ability of models to distinguish extreme eco-grades (A+, A, and F) across all approaches suggests that ingredient composition does reflect environmental performance at the extremes of the scale.</p>
+      <p>Tree-based and distance-based methods (RF, XGBoost, KNN) performed best on accuracy metrics, while ordinal models (Ridge, CORAL, CORN) offered interpretability advantages by respecting the inherent grade ordering. No single approach dominated across all criteria.</p>
+      <p>The modest overall performance reflects genuine structural limitations: with approximately 335 instances per eco-grade, training data was insufficient to capture full compositional variability. Ingredient inconsistencies, nested representations, and the fact that environmental grades also depend on factors beyond ingredients (sourcing, processing, packaging) create a natural ceiling for ingredient-only models.</p>
+      <p>These findings directly motivate Experiment 1, which addresses the data quality limitations identified here. By replacing LLM-processed ingredient text with a larger dataset structured using the Open Food Facts ingredient classification hierarchy, Experiment 1 tests whether reducing noise and increasing data volume can substantially improve on these baselines.</p>
     </div>
   </div>
 </section>
@@ -340,13 +353,14 @@ footer { padding: 2rem clamp(1.5rem, 5vw, 4rem); display: flex; justify-content:
       </div>
     </div>
     <div class="contact-block reveal">
-      <p style="font-size:15px; line-height:1.85;">This research is ongoing. If you work in food sustainability, environmental data science, or eco-labelling policy and would like to discuss the work, we would be glad to hear from you.</p>
+      <p style="font-size:15px; line-height:1.85;">Questions about this experiment or the broader research? Get in touch.</p>
       <a class="contact-link" href="https://www.linkedin.com/in/meganlcharles" target="_blank">Connect on LinkedIn &#8594;</a>
     </div>
   </div>
 </section>
 
 <footer>
+  <a class="footer-link" href="index.html">&#8592; All research</a>
   
 </footer>
 
